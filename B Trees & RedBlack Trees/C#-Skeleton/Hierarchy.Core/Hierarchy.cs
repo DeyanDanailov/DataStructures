@@ -6,16 +6,20 @@
 
     public class Hierarchy<T> : IHierarchy<T>
     {
+        private Node<T> root;
+        private Dictionary<T, Node<T>> nodes;
         public Hierarchy(T root)
         {
-            throw new NotImplementedException();
+            this.root = new Node<T>(root);
+            this.nodes = new Dictionary<T, Node<T>>();
+            this.nodes[root] = this.root;
         }
 
         public int Count
         {
             get
             {
-                throw new NotImplementedException();
+                return this.nodes.Count;
             }
         }
 
