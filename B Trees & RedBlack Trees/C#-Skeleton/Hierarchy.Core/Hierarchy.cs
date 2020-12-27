@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Collections;
+    using System.Linq;
 
     public class Hierarchy<T> : IHierarchy<T>
     {
@@ -25,7 +26,14 @@
 
         public void Add(T element, T child)
         {
-            throw new NotImplementedException();
+            if (!this.nodes.ContainsKey(element))
+            {
+                throw new InvalidOperationException("Element does not exist in hierarchy!");
+            }
+            else if (this.nodes[element].GetChildren().Any(c => c.GetValue().Equals(child)))
+            {
+                throw new InvalidOperationException("Element already contains child!");
+            }
         }
 
         public void Remove(T element)
