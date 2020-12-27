@@ -1,11 +1,12 @@
 ﻿
-
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Hierarchy.Core
 {
-    public class Node<T>
+    public class Node<T> : IEnumerable<T>
     {
         private T value;
         private Node<T> parent;
@@ -28,14 +29,44 @@ namespace Hierarchy.Core
         {
             this.parent = parent;
         }
-        public List<Node<T>> GetChildren() => this.children.ToList();
+        public List<Node<T>> GetChildren() 
+        {
+            if (!this.children.Any())
+            {
+                throw new ArgumentException("Element has no children!");
+            }
+            return this.children;
+        }
         public void AddChild(Node<T> child)
         {
             this.children.Add(child);
         }
+        public void RemoveChild(Node<T> child) 
+        {
+            this.children.Remove(child);
+        }
         public override string ToString()
         {
             return this.value.ToString();
+        }
+        public IEnumerator<T> GetEnumerator()
+        {
+            var queue = new Queue<Node<T>>();
+            queue.Enqueue(this);
+            while (queue.Count > 0)
+            {
+                var current = queue.Dequeue();
+                foreach (var child in current.GetChildren())
+                {
+                    queue.Enqueue(child);
+                }
+                yield return current.GetValue();
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
         }
     }
 }
