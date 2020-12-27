@@ -31,10 +31,6 @@ namespace Hierarchy.Core
         }
         public List<Node<T>> GetChildren() 
         {
-            if (!this.children.Any())
-            {
-                throw new ArgumentException("Element has no children!");
-            }
             return this.children;
         }
         public void AddChild(Node<T> child)

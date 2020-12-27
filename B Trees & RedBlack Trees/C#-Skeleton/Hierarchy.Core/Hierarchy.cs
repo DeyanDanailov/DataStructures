@@ -47,19 +47,20 @@
             }
             if (this.nodes[element].GetParent() == null)
             {
-                throw new ArgumentException("Root can not be removed!");
+                throw new InvalidOperationException("Root can not be removed!");
             }
-            
+
             var toBeRemoved = this.nodes[element];
             var parent = toBeRemoved.GetParent();
             parent.RemoveChild(toBeRemoved);
             var children = toBeRemoved.GetChildren();
-            this.nodes.Remove(element);
+
             foreach (var child in children)
             {
                 child.SetParent(parent);
                 parent.AddChild(child);
             }
+            this.nodes.Remove(element);
         }
 
         public IEnumerable<T> GetChildren(T item)
@@ -68,7 +69,7 @@
             {
                 return this.nodes[item].GetChildren().Select(c => c.GetValue());
             }
-           
+
             throw new ArgumentException("Element does not exists!");
         }
 
@@ -93,18 +94,15 @@
         public IEnumerable<T> GetCommonElements(Hierarchy<T> other)
         {
             var commonElements = new List<T>();
-            foreach (var elementInOther in other.nodes.Keys)
+            foreach (var element in this.nodes.Keys)
             {
-                foreach (var element in this.nodes.Keys)
+                if (other.nodes.ContainsKey(element))
                 {
-                    if (elementInOther.Equals(element))
-                    {
-                        commonElements.Add(elementInOther);
-                    }
+                    commonElements.Add(element);
                 }
             }
             return commonElements;
-        } 
+        }
 
         public IEnumerator<T> GetEnumerator()
         {
