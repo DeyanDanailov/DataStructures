@@ -1,25 +1,34 @@
-﻿using System;
+﻿using Magnum.Collections;
+using System;
 using System.Collections.Generic;
-using Wintellect.PowerCollections;
 
 public class FirstLastList<T> : IFirstLastList<T> where T : IComparable<T>
 {
+    private List<T> byInsertion;
+    private OrderedBag<T> byOrder;
+    public FirstLastList()
+    {
+        byInsertion = new List<T>();
+        byOrder = new OrderedBag<T>();
+    }
     public int Count
     {
         get
         {
-            throw new NotImplementedException();
+            return byInsertion.Count;
         }
     }
 
     public void Add(T element)
     {
-        throw new NotImplementedException();
+        byInsertion.Add(element);
+        byOrder.Add(element);
     }
 
     public void Clear()
     {
-        throw new NotImplementedException();
+        byInsertion.Clear();
+        byOrder.Clear();
     }
 
     public IEnumerable<T> First(int count)
