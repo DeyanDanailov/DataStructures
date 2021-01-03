@@ -33,22 +33,56 @@ public class FirstLastList<T> : IFirstLastList<T> where T : IComparable<T>
 
     public IEnumerable<T> First(int count)
     {
-        throw new NotImplementedException();
+        ValidateCount(count);
+        for (int i = 0; i < count; i++)
+        {
+            yield return byInsertion[i];
+        }
     }
 
     public IEnumerable<T> Last(int count)
     {
-        throw new NotImplementedException();
+        ValidateCount(count);
+        for (int i = byInsertion.Count - 1; i <= byInsertion.Count - count; i--)
+        {
+            yield return byInsertion[i];
+        }
     }
 
     public IEnumerable<T> Max(int count)
     {
-        throw new NotImplementedException();
+        ValidateCount(count);
+        foreach (var item in byOrder.Reversed())
+        {
+            if (count <= 0)
+            {
+                break;
+            }
+            yield return item;
+            count--;
+        }
     }
 
     public IEnumerable<T> Min(int count)
     {
-        throw new NotImplementedException();
+        ValidateCount(count);
+        foreach (var item in byOrder)
+        {
+            if (count <= 0)
+            {
+                break;
+            }
+            yield return item;
+            count--;
+        }
+    }
+
+    private void ValidateCount(int count)
+    {
+        if (count <= 0 || count > byOrder.Count)
+        {
+            throw new ArgumentOutOfRangeException("Not correct count of elements");
+        }
     }
 
     public int RemoveAll(T element)
