@@ -43,7 +43,7 @@ public class FirstLastList<T> : IFirstLastList<T> where T : IComparable<T>
     public IEnumerable<T> Last(int count)
     {
         ValidateCount(count);
-        for (int i = byInsertion.Count - 1; i <= byInsertion.Count - count; i--)
+        for (int i = byInsertion.Count - 1; i >= byInsertion.Count - count; i--)
         {
             yield return byInsertion[i];
         }
@@ -87,6 +87,12 @@ public class FirstLastList<T> : IFirstLastList<T> where T : IComparable<T>
 
     public int RemoveAll(T element)
     {
-        throw new NotImplementedException();
+        foreach (var item in byOrder.Range(element, true, element, true))
+        {
+            byInsertion.Remove(item);
+        }
+        var count = byOrder.RemoveAllCopies(element);
+
+        return count;
     }
 }
