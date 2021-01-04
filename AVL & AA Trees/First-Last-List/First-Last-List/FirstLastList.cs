@@ -1,17 +1,18 @@
 ﻿using Magnum.Collections;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public class FirstLastList<T> : IFirstLastList<T> where T : IComparable<T>
 {
-    private List<T> byInsertion;
-    private OrderedBag<T> byOrder;
-    private OrderedBag<T> byOrderReversed;
+    private LinkedList<T> byInsertion;
+    private OrderedBag<LinkedListNode<T>> byOrder;
+    private OrderedBag<LinkedListNode<T>> byOrderReversed;
     public FirstLastList()
     {
-        byInsertion = new List<T>();
-        byOrder = new OrderedBag<T>();
-        byOrderReversed = new OrderedBag<T>((x,y)=> - x.CompareTo(y));
+        byInsertion = new LinkedList<T>();
+        byOrder = new OrderedBag<LinkedListNode<T>>((x, y) => x.Value.CompareTo(y.Value));
+        byOrderReversed = new OrderedBag<LinkedListNode<T>>((x, y) => - x.Value.CompareTo(y.Value));
     }
     public int Count
     {
@@ -23,9 +24,10 @@ public class FirstLastList<T> : IFirstLastList<T> where T : IComparable<T>
 
     public void Add(T element)
     {
-        byInsertion.Add(element);
-        byOrder.Add(element);
-        byOrderReversed.Add(element);
+        var node = new LinkedListNode<T>(element);
+        byInsertion.AddLast(element);
+        byOrder.Add(node);
+        byOrderReversed.Add(node);
     }
 
     public void Clear()
@@ -38,18 +40,27 @@ public class FirstLastList<T> : IFirstLastList<T> where T : IComparable<T>
     public IEnumerable<T> First(int count)
     {
         ValidateCount(count);
-        for (int i = 0; i < count; i++)
+        var current = byInsertion.First;
+        while (count > 0)
         {
-            yield return byInsertion[i];
+            yield return current.Value;
+            current = current.Next;
+            count--;
         }
+
+        //return byInsertion.Take(count);
+
     }
 
     public IEnumerable<T> Last(int count)
     {
         ValidateCount(count);
-        for (int i = byInsertion.Count - 1; i >= byInsertion.Count - count; i--)
+        var current = byInsertion.Last;
+        while (count > 0)
         {
-            yield return byInsertion[i];
+            yield return current.Value;
+            current = current.Previous;
+            count--;
         }
     }
 
@@ -62,7 +73,7 @@ public class FirstLastList<T> : IFirstLastList<T> where T : IComparable<T>
             {
                 break;
             }
-            yield return item;
+            yield return item.Value;
             count--;
         }
     }
@@ -76,14 +87,14 @@ public class FirstLastList<T> : IFirstLastList<T> where T : IComparable<T>
             {
                 break;
             }
-            yield return item;
+            yield return item.Value;
             count--;
         }
     }
 
     private void ValidateCount(int count)
     {
-        if (count < 0 || count > byOrder.Count)
+        if (count < 0 || count > byInsertion.Count)
         {
             throw new ArgumentOutOfRangeException("Not correct count of elements");
         }
@@ -91,12 +102,13 @@ public class FirstLastList<T> : IFirstLastList<T> where T : IComparable<T>
 
     public int RemoveAll(T element)
     {
-        foreach (var item in byOrder.Range(element, true, element, true))
+        var node = new LinkedListNode<T>(element);
+        foreach (var item in byOrder.Range(node, true, node, true))
         {
-            byInsertion.Remove(item);
+            byInsertion.Remove(item.Value);
         }
-        var count = byOrder.RemoveAllCopies(element);
-        byOrderReversed.RemoveAllCopies(element);
+        var count = byOrder.RemoveAllCopies(node);
+        byOrderReversed.RemoveAllCopies(node);
 
         return count;
     }
