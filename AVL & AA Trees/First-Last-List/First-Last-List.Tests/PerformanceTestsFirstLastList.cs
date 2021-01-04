@@ -93,7 +93,7 @@ public class PerformanceTestsFirstLastList
     }
 
     [TestMethod]
-    [Timeout(200)]
+    [Timeout(600)]
     public void TestPerformance_RemoveAll()
     {
         // Arrange

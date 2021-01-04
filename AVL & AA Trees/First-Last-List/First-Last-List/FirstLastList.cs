@@ -12,7 +12,7 @@ public class FirstLastList<T> : IFirstLastList<T> where T : IComparable<T>
     {
         byInsertion = new LinkedList<T>();
         byOrder = new OrderedBag<LinkedListNode<T>>((x, y) => x.Value.CompareTo(y.Value));
-        byOrderReversed = new OrderedBag<LinkedListNode<T>>((x, y) => - x.Value.CompareTo(y.Value));
+        byOrderReversed = new OrderedBag<LinkedListNode<T>>((x, y) => -x.Value.CompareTo(y.Value));
     }
     public int Count
     {
@@ -103,7 +103,8 @@ public class FirstLastList<T> : IFirstLastList<T> where T : IComparable<T>
     public int RemoveAll(T element)
     {
         var node = new LinkedListNode<T>(element);
-        foreach (var item in byOrder.Range(node, true, node, true))
+        var range = byOrder.Range(node, true, node, true);
+        foreach (var item in range)
         {
             byInsertion.Remove(item.Value);
         }
