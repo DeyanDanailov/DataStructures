@@ -6,10 +6,12 @@ public class FirstLastList<T> : IFirstLastList<T> where T : IComparable<T>
 {
     private List<T> byInsertion;
     private OrderedBag<T> byOrder;
+    private OrderedBag<T> byOrderReversed;
     public FirstLastList()
     {
         byInsertion = new List<T>();
         byOrder = new OrderedBag<T>();
+        byOrderReversed = new OrderedBag<T>((x,y)=> - x.CompareTo(y));
     }
     public int Count
     {
@@ -23,12 +25,14 @@ public class FirstLastList<T> : IFirstLastList<T> where T : IComparable<T>
     {
         byInsertion.Add(element);
         byOrder.Add(element);
+        byOrderReversed.Add(element);
     }
 
     public void Clear()
     {
         byInsertion.Clear();
         byOrder.Clear();
+        byOrderReversed.Clear();
     }
 
     public IEnumerable<T> First(int count)
@@ -52,7 +56,7 @@ public class FirstLastList<T> : IFirstLastList<T> where T : IComparable<T>
     public IEnumerable<T> Max(int count)
     {
         ValidateCount(count);
-        foreach (var item in byOrder.Reversed())
+        foreach (var item in byOrderReversed)
         {
             if (count <= 0)
             {
@@ -79,7 +83,7 @@ public class FirstLastList<T> : IFirstLastList<T> where T : IComparable<T>
 
     private void ValidateCount(int count)
     {
-        if (count <= 0 || count > byOrder.Count)
+        if (count < 0 || count > byOrder.Count)
         {
             throw new ArgumentOutOfRangeException("Not correct count of elements");
         }
@@ -92,6 +96,7 @@ public class FirstLastList<T> : IFirstLastList<T> where T : IComparable<T>
             byInsertion.Remove(item);
         }
         var count = byOrder.RemoveAllCopies(element);
+        byOrderReversed.RemoveAllCopies(element);
 
         return count;
     }
