@@ -16,15 +16,7 @@ public class TriePerformanceTester
 
         editor.Prepend("Pesho", "example");
         Console.WriteLine(editor.Print("Pesho"));
-        editor.Delete("Pesho", 2, 2);
-        editor.Delete("Pesho", 2, 2);
-        editor.Undo("Pesho");
-        Console.WriteLine(editor.Print("Pesho"));
-
-        editor.Undo("Pesho");
-        Console.WriteLine(editor.Print("Pesho"));
-
-        editor.Undo("Pesho");
+        editor.Substring("Pesho", 0, 3);
         Console.WriteLine(editor.Print("Pesho"));
 
 

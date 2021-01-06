@@ -96,7 +96,17 @@ namespace Trie
 
         public void Substring(string username, int startIndex, int length)
         {
-            throw new NotImplementedException();
+            if (!this.usersStrings.Contains(username))
+            {
+                return;
+            }
+            var userString = this.usersStrings.GetValue(username);
+            this.usersStack
+                .GetValue(username)
+                .Push(String.Join("", this.usersStrings.GetValue(username)));
+            var newString = userString.GetRange(startIndex, length);
+
+            this.usersStrings.Insert(username, new BigList<char>(newString));
         }
 
         public void Undo(string username)
@@ -105,7 +115,7 @@ namespace Trie
             {
                 return;
             }
-            var userString = this.usersStrings.GetValue(username);
+            //var userString = this.usersStrings.GetValue(username);
             var userHistory = this.usersStack.GetValue(username);
             if (userHistory.Count == 0)
             {
