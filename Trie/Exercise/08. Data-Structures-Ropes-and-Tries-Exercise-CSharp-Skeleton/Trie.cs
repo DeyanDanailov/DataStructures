@@ -33,7 +33,10 @@ public class Trie<Value>
     {
         this.root = this.Insert(this.root, key, val, 0);
     }
-
+    public void Delete(string key)
+    {
+        this.root = this.Delete(this.root, key, 0);
+    }
     public IEnumerable<string> GetByPrefix(string prefix)
     {
         Queue<string> results = new Queue<string>();
@@ -110,10 +113,7 @@ public class Trie<Value>
             this.Collect(x.Next[c], prefix + c, results);
         }
     }
-    public void Delete(string key)
-    {
-        this.root = this.Delete(this.root, key, 0);
-    }
+    
     private Node Delete(Node x, string key, int d)
     {
         if (x == null) => null;

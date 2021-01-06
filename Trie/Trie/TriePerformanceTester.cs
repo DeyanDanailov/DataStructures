@@ -18,6 +18,8 @@ public class TriePerformanceTester
         Console.WriteLine(editor.Print("Pesho"));
         editor.Substring("Pesho", 0, 3);
         Console.WriteLine(editor.Print("Pesho"));
+        editor.Logout("Pesho");
+        Console.WriteLine(editor.Print("Pesho"));
 
 
         //IEnumerable<string> words = LoadWords(VocabularyPath);

@@ -67,7 +67,8 @@ namespace Trie
 
         public void Logout(string username)
         {
-            throw new NotImplementedException();
+            this.usersStrings.Delete(username);
+            this.usersStack.Delete(username);
         }
 
         public void Prepend(string username, string str)
@@ -129,7 +130,7 @@ namespace Trie
 
         public IEnumerable<string> Users(string prefix = "")
         {
-            throw new NotImplementedException();
+            return this.usersStrings.GetByPrefix(prefix);
         }
     }
 }
