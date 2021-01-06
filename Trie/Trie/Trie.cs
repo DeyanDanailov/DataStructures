@@ -7,40 +7,40 @@ public class Trie<Value>
 
     private class Node
     {
-        public Value val;
-        public bool isTerminal;
-        public Dictionary<char, Node> next = new Dictionary<char, Node>();
+        public Value Val;
+        public bool IsTerminal;
+        public Dictionary<char, Node> Next = new Dictionary<char, Node>();
     }
 
     public Value GetValue(string key)
     {
-        var x = GetNode(root, key, 0);
-        if (x == null || !x.isTerminal)
+        Node x = this.GetNode(this.root, key, 0);
+        if (x == null || !x.IsTerminal)
         {
             throw new InvalidOperationException();
         }
 
-        return x.val;
+        return x.Val;
     }
 
     public bool Contains(string key)
     {
-        var node = GetNode(this.root, key, 0);
-        return node != null && node.isTerminal;
+        Node node = this.GetNode(this.root, key, 0);
+        return node != null && node.IsTerminal;
     }
 
     public void Insert(string key, Value val)
     {
-        root = Insert(root, key, val, 0);
+        this.root = this.Insert(this.root, key, val, 0);
     }
 
     public IEnumerable<string> GetByPrefix(string prefix)
     {
-        var results = new Queue<string>();
-        var x = GetNode(root, prefix, 0);
+        Queue<string> results = new Queue<string>();
+        Node x = this.GetNode(this.root, prefix, 0);
 
         this.Collect(x, prefix, results);
-        
+
         return results;
     }
 
@@ -59,18 +59,38 @@ public class Trie<Value>
         Node node = null;
         char c = key[d];
 
-        if (x.next.ContainsKey(c))
+        if (x.Next.ContainsKey(c))
         {
-            node = x.next[c];
+            node = x.Next[c];
         }
 
-        return GetNode(node, key, d + 1);
+        return this.GetNode(node, key, d + 1);
     }
 
     private Node Insert(Node x, string key, Value val, int d)
     {
-       //ToDo: Create insert
-       throw new NotImplementedException();
+        if (x == null)
+        {
+            x = new Node();
+        }
+
+        if (d == key.Length)
+        {
+            x.Val = val;
+            x.IsTerminal = true;
+            return x;
+        }
+
+        Node node = null;
+        char c = key[d];
+
+        if (x.Next.ContainsKey(c))
+        {
+            node = x.Next[c];
+        }
+
+        x.Next[c] = this.Insert(node, key, val, d + 1);
+        return x;
     }
 
     private void Collect(Node x, string prefix, Queue<string> results)
@@ -80,14 +100,14 @@ public class Trie<Value>
             return;
         }
 
-        if (x.val != null && x.isTerminal)
+        if (x.Val != null && x.IsTerminal)
         {
             results.Enqueue(prefix);
         }
 
-        foreach (var c in x.next.Keys)
+        foreach (char c in x.Next.Keys)
         {
-            Collect(x.next[c], prefix + c, results);
+            this.Collect(x.Next[c], prefix + c, results);
         }
     }
 }
