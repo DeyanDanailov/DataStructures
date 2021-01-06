@@ -56,7 +56,7 @@ namespace Trie
 
         public int Length(string username)
         {
-            throw new NotImplementedException();
+            return this.usersStrings.GetValue(username).Count;
         }
 
         public void Login(string username)
@@ -112,7 +112,7 @@ namespace Trie
                 return;
             }
             var lastUserString = userHistory.Pop();
-            userHistory.Push(String.Join("", userString));
+            //userHistory.Push(String.Join("", userString)); This undoes the Undo command!!!
 
             this.usersStrings.Insert(username, new BigList<char>(lastUserString));
         }
