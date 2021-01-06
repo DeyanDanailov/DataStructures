@@ -15,17 +15,43 @@ namespace Trie
         }
         public void Clear(string username)
         {
-            throw new NotImplementedException();
+            if (!this.usersStrings.Contains(username))
+            {
+                return;
+            }
+            this.usersStack
+                .GetValue(username)
+                .Push(String.Join("", usersStrings.GetValue(username)));
+
+            this.usersStrings.Insert(username, new BigList<char>());
         }
 
         public void Delete(string username, int startIndex, int length)
         {
-            throw new NotImplementedException();
+            if (!this.usersStrings.Contains(username))
+            {
+                return;
+            }
+            this.usersStack
+                .GetValue(username)
+                .Push(String.Join("", usersStrings.GetValue(username)));
+
+            var userString = this.usersStrings.GetValue(username);
+            userString.RemoveRange(startIndex, length);
         }
 
         public void Insert(string username, int index, string str)
         {
-            throw new NotImplementedException();
+            if (!this.usersStrings.Contains(username))
+            {
+                return;
+            }
+            this.usersStack
+                .GetValue(username)
+                .Push(String.Join("", usersStrings.GetValue(username)));
+
+            var userString = this.usersStrings.GetValue(username);
+            userString.InsertRange(index, str);
         }
 
         public int Length(string username)
@@ -75,7 +101,20 @@ namespace Trie
 
         public void Undo(string username)
         {
-            throw new NotImplementedException();
+            if (!this.usersStrings.Contains(username))
+            {
+                return;
+            }
+            var userString = this.usersStrings.GetValue(username);
+            var userHistory = this.usersStack.GetValue(username);
+            if (userHistory.Count == 0)
+            {
+                return;
+            }
+            var lastUserString = userHistory.Pop();
+            userHistory.Push(String.Join("", userString));
+
+            this.usersStrings.Insert(username, new BigList<char>(lastUserString));
         }
 
         public IEnumerable<string> Users(string prefix = "")

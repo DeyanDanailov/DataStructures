@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Trie;
 
 public class TriePerformanceTester
 {
@@ -10,55 +11,64 @@ public class TriePerformanceTester
 
     public static void Main()
     {
-        IEnumerable<string> words = LoadWords(VocabularyPath);
-        Console.WriteLine("Words count: {0}", words.Count());
+        var editor = new StringEditor();
+        editor.Login("Pesho");
 
-        const int prefixLength = 2;
+        editor.Prepend("Pesho", "example");
+        editor.Delete("Pesho", 2, 4);
 
-        string[] prefixes = GetAllMatches(Enumerable.Range('A', 'Z' - 'A' + 1).
-            Select(i => (char)i).ToArray(), prefixLength)
-            .ToArray();
+        Console.WriteLine(editor.Print("Pesho"));
 
-        Console.WriteLine("Search prefixes count: {0}", prefixes.Count());
-        Console.WriteLine();
 
-        Stopwatch stopWatch = Stopwatch.StartNew();
-        int matchesCount = 0;
-        foreach (string prefix in prefixes)
-        {
-            string[] resultArray = words.Where(w => w.StartsWith(prefix)).ToArray();
-            matchesCount += resultArray.Count();
-        }
-        Console.WriteLine("Found {0} matches", matchesCount);
-        stopWatch.Stop();
+        //IEnumerable<string> words = LoadWords(VocabularyPath);
+        //Console.WriteLine("Words count: {0}", words.Count());
 
-        Console.WriteLine("Regular string matching time: {0} ms", stopWatch.ElapsedMilliseconds);
-        Console.WriteLine();
+        //const int prefixLength = 2;
 
-        stopWatch.Restart();
+        //string[] prefixes = GetAllMatches(Enumerable.Range('A', 'Z' - 'A' + 1).
+        //    Select(i => (char)i).ToArray(), prefixLength)
+        //    .ToArray();
 
-        Trie<bool> trie = new Trie<bool>();
-        foreach (var item in words)
-        {
-            trie.Insert(item, true);
-        }
+        //Console.WriteLine("Search prefixes count: {0}", prefixes.Count());
+        //Console.WriteLine();
 
-        stopWatch.Stop();
-        Console.WriteLine("Build trie time: {0} ms", stopWatch.ElapsedMilliseconds);
-        Console.WriteLine();
+        //Stopwatch stopWatch = Stopwatch.StartNew();
+        //int matchesCount = 0;
+        //foreach (string prefix in prefixes)
+        //{
+        //    string[] resultArray = words.Where(w => w.StartsWith(prefix)).ToArray();
+        //    matchesCount += resultArray.Count();
+        //}
+        //Console.WriteLine("Found {0} matches", matchesCount);
+        //stopWatch.Stop();
 
-        stopWatch.Restart();
-        matchesCount = 0;
+        //Console.WriteLine("Regular string matching time: {0} ms", stopWatch.ElapsedMilliseconds);
+        //Console.WriteLine();
 
-        foreach (string prefix in prefixes)
-        {
-            string[] resultTrie = trie.GetByPrefix(prefix).ToArray();
-            matchesCount += resultTrie.Length;
-        }
+        //stopWatch.Restart();
 
-        Console.WriteLine("Found {0} matches", matchesCount);
-        stopWatch.Stop();
-        Console.WriteLine("Trie find prefixes time: {0} ms", stopWatch.ElapsedMilliseconds);
+        //Trie<bool> trie = new Trie<bool>();
+        //foreach (var item in words)
+        //{
+        //    trie.Insert(item, true);
+        //}
+
+        //stopWatch.Stop();
+        //Console.WriteLine("Build trie time: {0} ms", stopWatch.ElapsedMilliseconds);
+        //Console.WriteLine();
+
+        //stopWatch.Restart();
+        //matchesCount = 0;
+
+        //foreach (string prefix in prefixes)
+        //{
+        //    string[] resultTrie = trie.GetByPrefix(prefix).ToArray();
+        //    matchesCount += resultTrie.Length;
+        //}
+
+        //Console.WriteLine("Found {0} matches", matchesCount);
+        //stopWatch.Stop();
+        //Console.WriteLine("Trie find prefixes time: {0} ms", stopWatch.ElapsedMilliseconds);
     }
 
     private static IEnumerable<string> GetAllMatches(char[] chars, int length)
