@@ -15,5 +15,14 @@ namespace SweepAndPrune
         public int Y1 { get; set; }
         public int X2 { get { return this.X1 + 10; } }
         public int Y2 { get { return this.Y1 + 10; } }
+
+        public bool Intersects(Item that)
+        {
+            return 
+                this.X1 <= that.X2 &&
+                this.X2 >= that.X1 &&
+                this.Y1 <= that.Y2 &&
+                this.Y2 >= that.Y1;
+        }
     }
 }

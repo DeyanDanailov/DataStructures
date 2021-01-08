@@ -11,7 +11,7 @@ namespace SweepAndPrune
             var byId = new Dictionary<string, Item>();
 
             var running = true;
-            var ticks = 0;
+            var ticks = 1;
             var line = Console.ReadLine();
             while (!line.Equals("end"))
             {
@@ -24,9 +24,12 @@ namespace SweepAndPrune
                     case "start":
                         while (running)
                         {
+                            line = Console.ReadLine();
+                            cmdArgs = line.Split();
                             if (cmdArgs[0].Equals("end"))
                             {
                                 running = false;
+                                break;
                             }
                             if (cmdArgs[0].Equals("move"))
                             {
@@ -37,18 +40,36 @@ namespace SweepAndPrune
                                 byId[id].Y1 = y;
                             }
 
-                            Sweep(ticks, items);
+                            Sweep(ticks++, items);
                         }
                         break;
                     default:
                         break;
                 }
+
+                line = Console.ReadLine();
             }
         }
 
         private static void Sweep(int ticks, List<Item> items)
         {
             InsertionSort(items );
+            for (int i = 0; i < items.Count; i++)
+            {
+                var current = items[i];
+                for (int j = i+1; j < items.Count; j++)
+                {
+                    var candidate = items[j];
+                    if (candidate.X1 > current.X2)
+                    {
+                        break;
+                    }
+                    if (current.Intersects(candidate))
+                    {
+                        Console.WriteLine("({0}) {1} collides with {2}", ticks, current.Id, candidate.Id);
+                    }
+                }
+            }
         }
 
         private static void InsertionSort(List<Item> items)
