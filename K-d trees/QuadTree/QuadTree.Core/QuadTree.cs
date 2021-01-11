@@ -61,9 +61,21 @@ public class QuadTree<T> where T : IBoundable
         node.Children[2] = new Node<T>(node.Bounds.X1, node.Bounds.MidY, leftWidth, botHeight);
         node.Children[3] = new Node<T>(node.Bounds.MidX, node.Bounds.MidY, rightWidth, botHeight);
 
+        var toRemove = new HashSet<T>();
         foreach (var item in node.Items)
         {
+            var q = GetQ(node, item.Bounds);
+            if (q != -1)
+            {
+                node.Children[q].Items.Add(item);
+                toRemove.Add(item);
+            }
+        }
+        node.Items.RemoveAll(x => toRemove.Contains(x));
 
+        foreach (var child in node.Children)
+        {
+            TrySplit(child, depth + 1);
         }
     }
 
@@ -81,7 +93,40 @@ public class QuadTree<T> where T : IBoundable
 
     public List<T> Report(Rectangle bounds)
     {
-        throw new NotImplementedException();
+        var results = new List<T>();
+        GetPotentialCollisions(this.root, bounds, results);
+        return results;
+    }
+
+    private void GetPotentialCollisions(Node<T> node, Rectangle bounds, List<T> results)
+    {
+        var q = GetQ(node, bounds);
+        if (q != -1)
+        {
+            results.AddRange(node.Items);
+            GetPotentialCollisions(node.Children[q], bounds, results);
+        }
+        else
+        {
+            GetNodeItems(node, results);
+        }
+    }
+
+    private void GetNodeItems(Node<T> node, List<T> results)
+    {
+        if (node == null)
+        {
+            return;
+        }
+        results.AddRange(node.Items);
+
+        if (node.Children != null)
+        {
+            foreach (var child in node.Children)
+            {
+                GetNodeItems(child, results);
+            }
+        }      
     }
 
     private void ForEachDfs(Node<T> node, Action<List<T>, int, int> action, int depth = 1, int quadrant = 0)
