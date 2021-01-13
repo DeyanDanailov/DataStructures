@@ -10,7 +10,6 @@ namespace SweepAndPrune
             var items = new List<Item>();
             var byId = new Dictionary<string, Item>();
 
-            var running = true;
             var ticks = 1;
             var line = Console.ReadLine();
             while (!line.Equals("end"))
@@ -22,14 +21,13 @@ namespace SweepAndPrune
                         AddItem(items, byId, cmdArgs);
                         break;
                     case "start":
-                        while (running)
+                        while (true)
                         {
                             line = Console.ReadLine();
                             cmdArgs = line.Split();
                             if (cmdArgs[0].Equals("end"))
                             {
-                                running = false;
-                                break;
+                                return;
                             }
                             if (cmdArgs[0].Equals("move"))
                             {
@@ -42,7 +40,6 @@ namespace SweepAndPrune
 
                             Sweep(ticks++, items);
                         }
-                        break;
                     default:
                         break;
                 }
