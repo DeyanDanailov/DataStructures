@@ -24,16 +24,19 @@ namespace ShoppingCenter
                         case "AddProduct":
                             productRepository.AddProduct(cmdArgs[0],
                                 decimal.Parse(cmdArgs[1]), cmdArgs[2]);
+                            Console.WriteLine("Product added");
                             break;
                         case "DeleteProducts":
+                            var deleted = 0;
                             if (cmdArgs.Length == 1)
                             {
-                                productRepository.DeleteByProducer(cmdArgs[0]);
+                                deleted = productRepository.DeleteByProducer(cmdArgs[0]);
                             }
                             else
                             {
-                                productRepository.DeleteByNameAndProducer(cmdArgs[0], cmdArgs[1]);
+                                 deleted = productRepository.DeleteByNameAndProducer(cmdArgs[0], cmdArgs[1]);
                             }
+                            Console.WriteLine($"{deleted} products deleted");
                             break;
                         case "FindProductsByName":
                             var result = productRepository.FindByName(cmdArgs[0]);
