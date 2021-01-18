@@ -58,7 +58,7 @@ namespace ShoppingCenter
                 byNameAndProducer[$"{product.Name}{product.Producer}"].Remove(product);
                 byPrice[product.Price].Remove(product);
             }
-            byNameAndProducer.Remove(producer);
+            byProducer.Remove(producer);
 
             return toDelete.Count;
         }
@@ -66,6 +66,10 @@ namespace ShoppingCenter
         public IEnumerable<Product> FindByName(string name)
         {
             if (!byName.ContainsKey(name))
+            {
+                throw new ArgumentException("No products found");
+            }
+            if (byName[name].Count == 0)
             {
                 throw new ArgumentException("No products found");
             }
@@ -78,6 +82,10 @@ namespace ShoppingCenter
             {
                 throw new ArgumentException("No products found");
             }
+            if (byProducer[producer].Count == 0)
+            {
+                throw new ArgumentException("No products found");
+            }
             return byProducer[producer];
         }
 
@@ -86,9 +94,14 @@ namespace ShoppingCenter
             var result = new OrderedBag<Product>();
 
             var priceResults = byPrice.Range(fromPrice, true, toPrice, true);
+          
             foreach (var item in priceResults)
             {
                 result.AddMany(item.Value);
+            }
+            if (result.Count == 0)
+            {
+                throw new ArgumentException("No products found");
             }
             return result;
         }

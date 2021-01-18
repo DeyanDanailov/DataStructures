@@ -10,14 +10,13 @@ namespace ShoppingCenter
             var productRepository = new ProductRepository();
             for (int i = 0; i < n; i++)
             {
-                var cmd = Console.ReadLine()
-                    .Split(' ',
-                    StringSplitOptions.RemoveEmptyEntries);
-                var command = cmd[0];
+                var cmd = Console.ReadLine();
+                var index = cmd.IndexOf(' ');
+                var command = cmd.Substring(0, index);
 
                 try
                 {
-                    var cmdArgs = cmd[1].Split(';', StringSplitOptions.RemoveEmptyEntries);
+                    var cmdArgs = cmd.Substring(index + 1).Split(';', StringSplitOptions.RemoveEmptyEntries);
                     switch (command)
                     {
                        

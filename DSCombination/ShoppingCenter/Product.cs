@@ -27,7 +27,7 @@ namespace ShoppingCenter
         }
         public override string ToString()
         {
-            return $"{this.Name};{this.Producer};{this.Price : F2}";
+            return $"{this.Name};{this.Producer};{this.Price:F2}";
         }
     }
 }
