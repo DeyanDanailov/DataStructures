@@ -7,7 +7,7 @@ namespace ShoppingCenter
 {
     public class Product : IComparable<Product>
     {
-        public Product(string name, int price, string producer)
+        public Product(string name, decimal price, string producer)
         {
             this.Name = name;
             this.Price = price;
@@ -24,6 +24,10 @@ namespace ShoppingCenter
             if (cmp == 0) cmp = this.Price.CompareTo(other.Price);
 
             return cmp;
+        }
+        public override string ToString()
+        {
+            return $"{this.Name};{this.Producer};{this.Price : F2}";
         }
     }
 }
