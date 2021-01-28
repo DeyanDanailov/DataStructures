@@ -85,7 +85,7 @@
             CheckBunnyExists(bunnyName);
             var bunny = bunniesByName[bunnyName];
             bunniesByRooms[bunny.RoomId].Remove(bunny);
-            var myKey = bunny.RoomId;
+            var myKey = roomsById.IndexOf(bunny.RoomId);
             if (myKey + 1 > roomsById.Count -1)
             {
                 myKey = 0;
@@ -95,7 +95,8 @@
                 myKey++;
             }
             var newKey = roomsById[myKey];
-            bunniesByRooms[newKey].Add(bunny);         
+            bunniesByRooms[newKey].Add(bunny);
+            bunny.RoomId = newKey;
         }
 
         public void Previous(string bunnyName)
@@ -103,7 +104,7 @@
             CheckBunnyExists(bunnyName);
             var bunny = bunniesByName[bunnyName];
             bunniesByRooms[bunny.RoomId].Remove(bunny);
-            var myKey = bunny.RoomId;
+            var myKey = roomsById.IndexOf(bunny.RoomId);
             if (myKey - 1 < 0)
             {
                 myKey = roomsById.Count - 1;
@@ -114,6 +115,7 @@
             }
             var newKey = roomsById[myKey];
             bunniesByRooms[newKey].Add(bunny);
+            bunny.RoomId = newKey;
         }
 
 
